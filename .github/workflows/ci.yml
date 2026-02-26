@@ -5,6 +5,7 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,10 +19,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore EasyLearn.Api/EasyLearn.Api.sln
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build EasyLearn.Api/EasyLearn.Api.sln --no-restore
 
       - name: Test
-        run: dotnet test --no-build
+        run: dotnet test EasyLearn.Api/EasyLearn.Api.sln --no-build
