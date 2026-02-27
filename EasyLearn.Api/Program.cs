@@ -42,6 +42,26 @@ namespace EasyLearn.Api
             builder.Services.AddScoped<TagService>();
 
             var app = builder.Build();
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "application/json";
+
+                    var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+                    if (error != null)
+                    {
+                        var result = System.Text.Json.JsonSerializer.Serialize(new
+                        {
+                            message = "An unexpected error occurred.",
+                            detail = error.Error.Message
+                        });
+
+                        await context.Response.WriteAsync(result);
+                    }
+                });
+            });
             app.UseCors("AllowReact");
 
             // Configure the HTTP request pipeline.
